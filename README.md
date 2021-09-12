@@ -1,24 +1,9 @@
-# hitszoj-web-pre
+# hitszoj-web
 
-## Project setup
+全局消息提示调用方法
+```javascript
+this.$message.success('msg');
+this.$message.info('msg');
+this.$message.warning('msg');
+this.$message.error('msg');
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

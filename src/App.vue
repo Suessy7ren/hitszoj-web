@@ -1,28 +1,25 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-main>
+      <router-view />
+      <GlobalMsgbar></GlobalMsgbar>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import GlobalMsgbar from "./components/GlobalMsgbar/index.vue";
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    GlobalMsgbar
   }
-}
+};
 </script>
 
-<style>
+<style scoped>
+/* 全局淡灰色背景样式，勿删 */
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  background-color: rgb(250,250,250);
 }
 </style>
