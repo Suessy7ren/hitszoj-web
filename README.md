@@ -22,11 +22,26 @@
 
 ## API
 
-全局消息提示调用方法
+### 全局消息提示
 
 ```javascript
 this.$message.success('msg');
 this.$message.info('msg');
 this.$message.warning('msg');
 this.$message.error('msg');
+```
+
+## 其他
+
+### Icons
+
+使用方法：
+
+1.访问 [https://materialdesignicons.com/](https://materialdesignicons.com/)
+
+2.找到希望使用的图标名，如 `account`
+
+3.带上 `mdi-` 前缀，插入以下标签
+```
+<v-icon>mdi-account</v-icon>
 ```
