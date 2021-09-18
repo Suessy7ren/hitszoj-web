@@ -17,41 +17,45 @@
         />
       </div>
 
-            <v-row class="mx-2" >
-              <v-menu
-                  v-for="(navMenu, index) in navMenus"
-                  v-bind:key="index"
-                  offset-y
-                  content-class="elevation-1"
-                  open-on-hover
-              >
-                <template v-slot:activator="{ attrs, on }">
-                  <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      text
-                      :to="navMenu.hasSubMenu ? '' : navMenu.route"
-                      class="mx-1"
-                      color="rgb(50, 50, 50)"
-                      active-class="customNavBtn"
-                  >
-                    {{ navMenu.name }}
-                    <v-icon v-if="navMenu.hasSubMenu" dense right>mdi-chevron-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list v-if="navMenu.hasSubMenu">
-                  <v-list-item
-                      v-for="(item, index) in navMenu.subMenu"
-                      v-bind:key="index"
-                      link
-                      :to="item.route"
-                  >
-                    <v-list-item-subtitle>{{ item.name }}</v-list-item-subtitle>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-row>
 
+      <v-row class="mx-2">
+        <v-menu
+            attach=".v-app-bar"
+            v-for="(navMenu, index) in navMenus"
+            v-bind:key="index"
+            offset-y
+            content-class="customMenu"
+            open-on-hover
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+                v-on="on"
+                text
+                :to="navMenu.hasSubMenu ? '' : navMenu.route"
+                class="mx-1"
+                color="rgb(50, 50, 50)"
+                active-class="customNavBtn"
+            >
+              {{ navMenu.name }}
+              <v-icon v-if="navMenu.hasSubMenu" dense right>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-list v-if="navMenu.hasSubMenu">
+              <v-list-item
+                  v-for="(item, index) in navMenu.subMenu"
+                  v-bind:key="index"
+                  link
+                  :to="item.route"
+              >
+                <v-list-item-subtitle>{{ item.name }}</v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+          </v-card>
+
+
+        </v-menu>
+      </v-row>
 
 
       <v-spacer></v-spacer>
@@ -74,8 +78,7 @@
 export default {
   name: 'Home',
   methods: {},
-  components: {
-  },
+  components: {},
   data() {
     return {
       currentMenuIndex: 0,
@@ -113,6 +116,11 @@ export default {
           name: '文章详情',
           hasSubMenu: false,
           route: {name: 'ArticleContent'}
+        },
+        {
+          name: '测试页面',
+          hasSubMenu: false,
+          route: {name: 'Test'}
         }
       ]
     }
@@ -127,17 +135,30 @@ export default {
 }
 
 .customNavBtn {
-  background-color: rgba(33,150,243, 0.1);
-  color: rgb(33,150,243) !important;
+  background-color: rgba(33, 150, 243, 0.1);
+  color: rgb(33, 150, 243) !important;
   font-weight: bold;
 }
-</style>
 
-<style>
+/*.customMenu {*/
+/*  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px !important;*/
+/*}*/
+
+
 #navbar {
   border-bottom-color: rgb(220, 220, 220);
   border-bottom-width: 3px;
   box-shadow: 0 2px 10px rgb(230, 230, 230);
 }
+
+
 </style>
+
+<!--<style>-->
+<!--#navbar {-->
+<!--  border-bottom-color: rgb(220, 220, 220);-->
+<!--  border-bottom-width: 3px;-->
+<!--  box-shadow: 0 2px 10px rgb(230, 230, 230);-->
+<!--}-->
+<!--</style>-->
 
