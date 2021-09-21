@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import StuTaskPage from "../views/stu/StuTaskPage";
 import StuApp from '../views/stu/StuNav'
 import StuHome from "../views/stu/StuHome";
+import Login from '../views/common/Login'
 
 Vue.use(VueRouter)
 
@@ -12,9 +13,15 @@ const routes = [
     redirect: '/stu'
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
     path: '/stu',
     name: 'StuApp',
     component: StuApp,
+    redirect: '/stu/home',
     children: [
       {
         path: 'home',
@@ -71,6 +78,30 @@ const routes = [
         components: {
           main: () => import('../views/common/Test')
         }
+      },
+      {
+        path: 'profile',
+        name: 'StuProfile',
+        redirect: '/stu/profile/info',
+        components: {
+          main: () => import('../views/stu/StuProfile')
+        },
+        children: [
+          {
+            path: 'info',
+            name: 'StuProfileInfo',
+            components: {
+              profileSettingView: () => import('../views/stu/StuProfileInfo')
+            }
+          },
+          {
+            path: 'safety',
+            name: 'StuProfileSafety',
+            components: {
+              profileSettingView: () => import('../views/stu/StuProfileSafety')
+            }
+          }
+        ]
       }
     ]
   },

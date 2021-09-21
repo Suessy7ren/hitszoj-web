@@ -63,10 +63,10 @@
       <v-btn icon @click="() => {}">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-      <v-btn icon @click="() => {}">
+      <v-btn icon :to="{name: 'StuProfile'}">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn icon @click="() => {}">
+      <v-btn icon @click="toLoginPage">
         <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
     </v-app-bar>
@@ -76,8 +76,12 @@
 
 <script>
 export default {
-  name: 'Home',
-  methods: {},
+  name: 'StuNav',
+  methods: {
+    toLoginPage() {
+      this.$router.push({name: 'Login'});
+    }
+  },
   components: {},
   data() {
     return {
@@ -153,12 +157,4 @@ export default {
 
 
 </style>
-
-<!--<style>-->
-<!--#navbar {-->
-<!--  border-bottom-color: rgb(220, 220, 220);-->
-<!--  border-bottom-width: 3px;-->
-<!--  box-shadow: 0 2px 10px rgb(230, 230, 230);-->
-<!--}-->
-<!--</style>-->
 

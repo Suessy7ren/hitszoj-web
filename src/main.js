@@ -7,6 +7,7 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+/* 自定义全局消息组件 */
 import GlobalMessage from "./components/GlobalMsgbar/api";
 Vue.prototype.$message = GlobalMessage;
 
@@ -14,7 +15,6 @@ Vue.prototype.$message = GlobalMessage;
 import { Upload } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 Vue.use(Upload);
-
 
 /* Markdown编辑器组件 */
 import mavonEditor from 'mavon-editor'
