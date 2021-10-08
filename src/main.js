@@ -3,18 +3,20 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import store from './store'
+import './config/interceptor'
 
 
 Vue.config.productionTip = false
 
+/* 自定义全局消息组件 */
 import GlobalMessage from "./components/GlobalMsgbar/api";
 Vue.prototype.$message = GlobalMessage;
 
 /* Ant-Design文件上传组件 */
-import { Upload } from 'ant-design-vue';
+import { Upload, Icon } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 Vue.use(Upload);
-
+Vue.use(Icon);
 
 /* Markdown编辑器组件 */
 import mavonEditor from 'mavon-editor'

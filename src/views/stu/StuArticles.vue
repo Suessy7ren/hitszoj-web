@@ -6,8 +6,7 @@
         <v-col cols="12" sm="9">
           <v-card
               class="mb-13 pb-4"
-              outlined
-              elevation="0"
+              elevation="1"
           >
             <div
                 v-for="(blog, index) in blogs"
