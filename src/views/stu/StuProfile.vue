@@ -50,8 +50,21 @@
 </template>
 
 <script>
+
+
 export default {
-  name: "StuProfile"
+  name: "StuProfile",
+
+  data() {
+    return {
+      dialog: false,
+
+    }
+
+  },
+  methods: {
+
+  }
 }
 </script>
 
@@ -73,4 +86,6 @@ export default {
   color: rgb(33, 150, 243) !important;
   font-weight: bold;
 }
+
+
 </style>

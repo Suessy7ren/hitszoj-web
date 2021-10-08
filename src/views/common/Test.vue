@@ -13,6 +13,15 @@
       <v-col cols="auto">
         <v-btn @click="successMsg" color="success">测试全局消息提示</v-btn>
       </v-col>
+      <v-col cols="auto">
+        <v-btn @click="testToken">获取token</v-btn>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn @click="getUserInfo">获取用户信息</v-btn>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn @click="testPasswordDigest">测试密码摘要</v-btn>
+      </v-col>
     </v-row>
     <v-row class="mx-4" justify="start">
       <v-col v-for="(card, index) in cards"
@@ -41,16 +50,41 @@
       </v-col>
 
     </v-row>
+    <v-row class="mx-4">
+      <v-card
+          class="mx-auto mt-5 mb-12 px-6 py-6"
+          elevation="1"
+
+      >
+<!--        <MonacoEditor-->
+<!--            class="editor"-->
+<!--            v-model="code"-->
+<!--            language="javascript"-->
+<!--        />-->
+      </v-card>
+
+    </v-row>
 
 
   </div>
 </template>
 
 <script>
+//import {login} from "../../api/auth/user";
+
+import {getUserInfo} from "../../api/auth/user";
+
+//import MonacoEditor from 'vue-monaco'
+import PasswordService from "../../api/auth/password";
+
 export default {
   name: "Test",
+  components: {
+    //MonacoEditor
+  },
   data () {
     return {
+      code: 'const noop = () => {}',
       cards: [
         {
           name: '0',
@@ -72,12 +106,17 @@ export default {
           name: '4 及以上',
           elevation: 4
         }
-      ]
+      ],
+      user: {
+        username: 'root',
+        password: 'hitszoj201',
+      }
+
     }
   },
   methods: {
     errorMsg() {
-      this.$message.error('This is a error message');
+      this.$message.error('This sis a error message');
     },
     warnMsg() {
       this.$message.warning('This is a error message');
@@ -87,11 +126,28 @@ export default {
     },
     successMsg() {
       this.$message.success('This is a error message');
+    },
+    testToken() {
+      this.$store.dispatch('user/userLogin', this.user);
+    },
+    getUserInfo() {
+      getUserInfo().then(resp => {
+        console.log(resp);
+      })
+    },
+    testPasswordDigest() {
+      let password = '123456';
+      let random = 'abcd';
+      let enc = PasswordService.encryptPassword(password, random);
+      console.log(enc);
     }
   }
 }
 </script>
 
 <style scoped>
-
+.editor {
+  width: 600px;
+  height: 800px;
+}
 </style>

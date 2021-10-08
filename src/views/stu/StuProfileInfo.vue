@@ -16,9 +16,7 @@
                 alt="Coiggahou"
             >
           </v-avatar>
-          <v-btn class="mx-4" depressed>
-            上传 / 修改
-          </v-btn>
+          <AvatarUpload/>
         </section>
 
       </section>
@@ -56,8 +54,13 @@
 </template>
 
 <script>
+import AvatarUpload from "../../components/AvatarUpload";
+
 export default {
-  name: "StuProfileInfo"
+  name: "StuProfileInfo",
+  components: {
+    AvatarUpload
+  },
 }
 </script>
 

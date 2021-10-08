@@ -63,10 +63,10 @@
       <v-btn icon @click="() => {}">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-      <v-btn icon :to="{name: 'StuProfile'}">
+      <v-btn icon to="/profile">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn icon @click="toLoginPage">
+      <v-btn icon @click="logout">
         <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
     </v-app-bar>
@@ -75,11 +75,18 @@
 </template>
 
 <script>
+import {generateNavMenu} from "../../utils/nav-generator";
+
 export default {
   name: 'StuNav',
+  created() {
+    this.navMenus = generateNavMenu(this.$store.state.user.permittedRouteList);
+  },
   methods: {
-    toLoginPage() {
-      this.$router.push({name: 'Login'});
+    logout() {
+      this.$store.dispatch('user/userLogout').then(() => {
+        this.$router.push('/login')
+      })
     }
   },
   components: {},

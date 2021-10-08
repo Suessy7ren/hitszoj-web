@@ -16,9 +16,7 @@
         <div class="mt-4 mx-4 d-flex align-center">
           <span class="text-body-1 mr-2">密码</span>
           <span class="text--secondary mx-2">********</span>
-          <v-btn text plain color="error">
-            修改密码
-          </v-btn>
+          <PasswordModifyCard/>
         </div>
       </section>
 
@@ -27,8 +25,12 @@
 </template>
 
 <script>
+import PasswordModifyCard from "../../components/PasswordModifyCard";
 export default {
-  name: "StuProfileSafety"
+  name: "StuProfileSafety",
+  components: {
+    PasswordModifyCard
+  }
 }
 </script>
 

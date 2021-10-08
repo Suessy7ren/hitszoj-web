@@ -1,9 +1,10 @@
+
 <template>
   <div class="fullScreenHeight">
     <div class="fullScreenHeight" id="loginBackground">
       <v-card class="loginCard pa-6 mx-auto rounded-lg" max-width="600" elevation="4">
         <v-container id="loginFormContainer">
-          <v-form v-model="valid" ref="customerForm" lazy-validation class="loginFormContainer">
+          <v-form v-model="valid" ref="loginForm" lazy-validation class="loginFormContainer">
 
             <div class="text-h3 my-2">登录</div>
             <p class="text-subtitle-1 grey--text">使用您的账户名和密码来登录系统</p>
@@ -11,7 +12,7 @@
             <v-row>
               <v-col>
                 <v-text-field
-                    v-model="user.usernameOrEmailOrPhone"
+                    v-model="user.account"
                     :rules="rules.basicRules"
                     label="用户名"
                     class="rounded-lg"
@@ -43,7 +44,7 @@
             <v-row dense align="center">
               <v-col cols="auto">
                 <v-checkbox
-                    v-model="user.rememberMe"
+                    v-model="rememberMe"
                     label="记住我"
                 ></v-checkbox>
               </v-col>
@@ -93,17 +94,17 @@
 </template>
 
 <script>
-import {passwordDigest} from "../../api/cryp";
+
 
 export default {
   name: "Login",
   components: {},
   data: () => ({
     valid: false,
+    rememberMe: false,
     user: {
-      usernameOrEmailOrPhone: '',
+      account: '',
       password: '',
-      rememberMe: false,
     },
     rules: {
       basicRules: [
@@ -116,11 +117,18 @@ export default {
   }),
   methods: {
     submit() {
-      console.log(passwordDigest(this.user.password));
-      //this.$router.push('/stu');
+      if (this.$refs.loginForm.validate()) {
+        this.$store.dispatch('user/userLogin', this.user).then(() => {
+          this.$store.dispatch('user/getInfo').then(() => {
+            this.$store.dispatch('user/generatePermittedRouteList', this.$store.state.user.role).then(() => {
+              this.$router.push({ path: '/' });
+            })
+          });
+        })
+      }
     },
     resetForm() {
-      this.$refs.customerForm.reset();
+      this.$refs.loginForm.reset();
       this.isAlertSeen = false;
     }
   }

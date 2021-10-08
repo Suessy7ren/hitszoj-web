@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import StuTaskPage from "../views/stu/StuTaskPage";
-import StuApp from '../views/stu/StuNav'
+import Nav from '../views/common/Nav'
 import StuHome from "../views/stu/StuHome";
 import Login from '../views/common/Login'
+import PageNotFound from '../views/common/PageNotFound'
 
 Vue.use(VueRouter)
 
-const routes = [
+export const defaultRoutes = [
   {
     path: '/',
-    redirect: '/stu'
+    component: Nav
   },
   {
     path: '/login',
@@ -18,73 +19,134 @@ const routes = [
     component: Login
   },
   {
-    path: '/stu',
-    name: 'StuApp',
-    component: StuApp,
-    redirect: '/stu/home',
+    path: '/404',
+    name: 'NotFoundPage',
+    component: PageNotFound
+  }
+]
+
+export const asyncRoutes = [
+  {
+    path: '/',
+    name: 'App',
+    component: Nav,
+    meta: {
+      roles: [1, 2, 3]
+    },
     children: [
       {
         path: 'home',
         name: 'StuHome',
         components: {
           main: StuHome
-        }
+        },
+        meta: {
+          nav: {
+            name: '首页'
+          },
+          roles: [1]
+        },
       },
       {
         path: 'homework',
         name: 'StuHomework',
         components: {
           main: StuTaskPage
-        }
+        },
+        meta: {
+          nav: {
+            name: '作业提交'
+          },
+          roles: [1]
+        },
       },
       {
         path: 'experiment',
         name: 'StuExperiment',
         components: {
           main: () => import('../views/stu/StuExpPage')
-        }
+        },
+        meta: {
+          nav: {
+            name: '实验提交'
+          },
+          roles: [1]
+        },
       },
       {
         path: 'problems',
         name: 'StuProblems',
         components: {
           main: () => import('../views/stu/StuProblemsPage')
-        }
+        },
+        meta: {
+          nav: {
+            name: '题库'
+          },
+          roles: [1]
+        },
       },
       {
         path: 'wiki',
         name: 'StuWiki',
         components: {
           main: () => import('../views/stu/StuWikiPage')
-        }
+        },
+        meta: {
+          nav: {
+            name: 'Wiki'
+          },
+          roles: [1]
+        },
       },
       {
         path: 'articles',
         name: 'StuArticles',
         components: {
           main: () => import('../views/stu/StuArticles')
-        }
+        },
+        meta: {
+          nav: {
+            name: '文章'
+          },
+          roles: [1, 2, 3],
+        },
       },
       {
         path: 'article',
         name: 'ArticleContent',
         components: {
-          main: () => import('../views/common/Ariticle')
-        }
+          main: () => import('../views/common/Article')
+        },
+        meta: {
+          nav: {
+            name: '文章详情'
+          },
+          roles: [1, 2, 3],
+        },
       },
       {
         path: 'test',
         name: 'Test',
         components: {
           main: () => import('../views/common/Test')
-        }
+        },
+        meta: {
+          nav: {
+            name: '测试页面'
+          },
+          roles: [3],
+        },
       },
       {
         path: 'profile',
         name: 'StuProfile',
-        redirect: '/stu/profile/info',
+        redirect: '/profile/info',
         components: {
           main: () => import('../views/stu/StuProfile')
+        },
+        meta: {
+          roles: [1],
         },
         children: [
           {
@@ -105,12 +167,16 @@ const routes = [
       }
     ]
   },
+  {
+    path: '*',
+    redirect: '/404',
+  }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
-  routes
+  routes: defaultRoutes
 })
 
 export default router
