@@ -13,7 +13,13 @@ Vue.prototype.$message = GlobalMessage;
 /* Ant-Design文件上传组件 */
 import { Upload } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
+/*引入antd的按钮组件 */
+import Button from 'ant-design-vue/lib/button';
+/*引入antd的Space */
+import Space from 'ant-design-vue/lib/space';
 Vue.use(Upload);
+Vue.use(Button);
+Vue.use(Space)
 
 
 /* Markdown编辑器组件 */

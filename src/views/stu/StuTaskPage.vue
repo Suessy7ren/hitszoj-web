@@ -28,24 +28,7 @@
          <v-expand-transition>
            <div v-show="homework.showDetail">
              <v-divider></v-divider>
-             <div class="px-3 py-3">
-               <a-upload-dragger
-                   name="file"
-                   :multiple="true"
-                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                   @change="handleChange"
-               >
-                 <p>
-                   <v-icon large>mdi-cloud-upload</v-icon>
-                 </p>
-                 <p class="ant-upload-text">
-                   点击或拖动以上传文件
-                 </p>
-                 <p class="ant-upload-hint">
-                   将要提交的文件拖动到这里或手动选择文件
-                 </p>
-               </a-upload-dragger>
-             </div>
+              <dropzone/>
            </div>
          </v-expand-transition>
        </v-card>
@@ -54,21 +37,18 @@
  </div>
 </template>
 
-<script>
+<script> 
+import Dropzone from '@/components/Dropzone'
+
+
 export default {
   name: "StuTaskPage",
+  components:{
+    Dropzone
+  },
+
   methods: {
-    handleChange(info) {
-      const status = info.file.status;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        this.$message.error(`${info.file.name} file upload failed.`);
-      }
-    },
+
   },
   data () {
     return {
