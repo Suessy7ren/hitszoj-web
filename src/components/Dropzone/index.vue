@@ -1,148 +1,159 @@
 <template>
   <div class="px-3 py-3">
- 
     <a-upload-dragger
-        name="file"
-        :file-list='fileList'
-        :multiple="false"
-        :action="uploadPath"
-        @change="handleChange"
-        :before-upload="beforeUpload"
-        :data = "postData"
-        style="width: 300px;"
-        
+    :file-list="fileList" 
+    :remove="handleRemove" 
+    :before-upload="beforeUpload"
+    style="width: 300px;"
     >
-        <p>
-        <v-icon large>mdi-cloud-upload</v-icon>
-        </p>
-        <p class="ant-upload-text">
-        点击或拖动以上传文件
-        </p>
-        <p class="ant-upload-hint">
-        将要提交的文件拖动到这里或手动选择文件
-        </p>
+    <p>
+    <v-icon large>mdi-cloud-upload</v-icon>
+    </p>
+    <p class="ant-upload-text">
+    点击或拖动以上传文件
+    </p>
+    <p class="ant-upload-hint">
+    您只能够提交一个文件
+    </p>
     </a-upload-dragger>
-    <br/>
-    <a-button 
-      type="primary" 
-      >
-      提交
+    <a-button
+      type="primary"
+      :disabled="fileList.length === 0 || fileList.length > 1"
+      :loading="uploading"
+      style="margin-top: 16px;"
+      @click="handleUpload"
+    >
+      {{ uploading ? 'Uploading' : 'Start Upload' }}
     </a-button>
-
-    
-
-
-
   </div>
 </template>
-
-
 <script>
-//七牛上传插件
-// import {generateUploadToken} from "@/api/token-generator";
-// import * as qiniu from 'qiniu-js';
-import {getToken } from '@/api/qiniu';
-import {sendFiledata2Backend} from '@/api/data2backend'
-
+import * as qiniu from "qiniu-js";
+// import {getToken } from '@/api/qiniu';
+import {generateUploadToken} from "@/api/token-generator";
 export default {
-  data(){
-    return{
-      uploadPath: 'http://upload-z2.qiniup.com', // 七牛云统一的上传地址
-      postData:{
-        token: '',
-        key: 'test'
-      }
-    }
+  data() {
+    return {
+      fileList: [],
+      uploading: false,
+      token: "",
+      key: "",
+
+    };
   },
   methods: {
-    //选择上传文件
-    processFileData(info){
-      console.log("begin to transfer data to the back-end database")
-      let data = {
-        "account": "test2",//假学号，请修改
-        // "lastModified": info.file.lastModified,
-        // "uploadDate": info.file.lastModifiedDate.constructor(),// upload date
-        "fileName": info.file.name,
-        // "size": info.file.size,
-        // "type": info.file.type,
-        // "hash": info.file.response.hash,
-        "path": info.file.response.key,
-        // "state": "uploadSuccess"
-      }
-      console.log("key----------")
-      console.log(info.file.response.key)
-      return data
-    },
-    handleChange(info) {
-      const status = info.file.status;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully.`);
-        console.log("finish uploading")
-        let data = this.processFileData(info)
-        console.log(data)
-        sendFiledata2Backend(data).then(res =>{
-            console.log(res.data)
-        })
-      } else if (status === 'error') {
-        console.log("error")
-        this.$message.error(`${info.file.name} file upload failed.`);
-      }
+    handleRemove(file) {
+      const index = this.fileList.indexOf(file);
+      const newFileList = this.fileList.slice();
+      newFileList.splice(index, 1);
+      this.fileList = newFileList;
     },
     beforeUpload(file) {
-      //限制大小
+      this.fileList = [...this.fileList, file];
+      return false;
+    },
+    isCompressed(ext){
+      //请自行补充后缀
+      return [
+        'zip', 'rar', 'tar', '7z',].
+        indexOf(ext.toLowerCase()) !== -1;
+    },
+    handleUpload() {
+      const { fileList } = this;
+      let file = fileList[0]//限定了只有一个文件
+      this.uploading = true;
+
+      //限制文件大小
       const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error('Image must smaller than 2MB!');
+      if(!isLt2M){
+        this.$message.error("文件大小必须小于2MB");
+        this.uploading = false;
+        return false;
+      }
+      let fileName = file.name;
+      //限制文件格式
+
+      var index= fileName.lastIndexOf(".");
+      var ext = fileName.substr(index+1);
+      if(!this.isCompressed(ext)){
+        this.$message.error("请上传zip/rar/tar/7z格式的文件");
+        this.uploading = false;
         return false;
       }
 
-      //限制文件后缀
-      // const isZip = file.type === 'zip';
-      // if (!isZip) {
-      //   this.$message.error('You can only upload zip file!');
-      //   return false;
-      // }
+      /*
+      变量定义：
+      1、filename: 文件名
+      2、accout: 学号
+      3、path: 存储路径
+       */
 
-      let fileName = file.name;
-      let account = "test2"; //假学号，请修改
-      console.log("test file name")
-      console.log(fileName)
-      let path = "test/" + account +"/" + fileName
-
-      // //跟后端联调用的token
       
-      getToken(fileName, account, path).then(res =>{
-        console.log(res.data)
-        let uptoken = res.data.data
-        console.log("upoken:")
-        console.log(uptoken)
-        this.postData.token = uptoken
-        this.postData.key = path
-      })
+      let account = "19011" //假学号，请自行修改
+      let path = "test/" + account + "/" + fileName //假路径，请自行修改
 
-      // //生成七牛云上传策略
-      // let policy = {};
-      // const bucketName = 'hitszoj';
-      // const deadline = Math.round(new Date().getTime() / 1000) + 3600;
-      // policy.scope = bucketName;
-      // policy.deadline = deadline;
+      //获取token
+      // getToken(fileName, account, path).then(res =>{
+      //   this.token = res.data.data;
+      //   this.key = path;
+      // })
 
-      // // 生成七牛云上传token
-      // const token = generateUploadToken(policy);
-      // var uptoken = token
-      // console.log("upoken:")
-      // console.log(uptoken)
+      //测试用，实际应用请删除，前端手动生成token
+      let policy = {};
+      const bucketName = 'hitszoj';
+      const deadline = Math.round(new Date().getTime() / 1000) + 3600;
+      policy.scope = bucketName;
+      policy.deadline = deadline;
 
-      // // 将token附带到请求的formData中
+      this.token = generateUploadToken(policy);
+      this.key = path
+      //实际使用请删除以上部分
 
-      // this.postData.token = uptoken
-      // this.postData.key = path
+      //上传时的配置
+      let config = {
+        useCdnDomain: true,//是否使用cdn加速域名
+      }
+
+      //设置文件的配置
+      let putExtra = {
+        fname: '',
+        params:{},
+        mimeType: null
+      }
+
+      //实例化七牛云上传实例
+      var key = this.key;
+      var token = this.token
+      const observable = qiniu.upload(file, key, token, putExtra, config)
+      
+      let _this = this
+
+      //设置实例监听
+      const observer = {
+        next(res){
+          //当前上传的百分比
+          console.log(res.total.percent)
+        },
+        error(err){
+          // 错误
+          console.log(err)
+          _this.$message.error("上传失败，请重新上传");
+          _this.uploading = false;
+          return false;
+        },
+        complete(res){
+          // 上传成功
+          
+          _this.fileList = []
+          _this.$message.success("上传成功");
+          _this.uploading = false;
+          return res;
+        }
+      }
+
+      //开始上传
+      observable.subscribe(observer);
     },
   },
-
-}
-
+};
 </script>

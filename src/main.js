@@ -17,9 +17,11 @@ import 'ant-design-vue/dist/antd.css';
 import Button from 'ant-design-vue/lib/button';
 /*引入antd的Space */
 import Space from 'ant-design-vue/lib/space';
+import Progress from 'ant-design-vue/lib/progress';
 Vue.use(Upload);
 Vue.use(Button);
 Vue.use(Space)
+Vue.use(Progress)
 
 
 /* Markdown编辑器组件 */
